@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
 
     printf("timing version: %s\n", timing_get_version());
     timing_start(&t);
-    // modify timinh by hand to get a good printout
+    // modify timing by hand to get a good printout
     struct timeval tv;
     tv.tv_sec = 1000;
     tv.tv_usec = 101;
