@@ -6,7 +6,19 @@
 ***     Version: 1.0.0
 ***     Purpose: Provide a simple format to gather timing information
 ***
-***     License:
+***     License: MIT 2015
+***
+***     URL: https://github.com/barrust/timing-c
+***
+***     Usage:
+***         struct timing t;
+***         timing_start(&t);
+***         // code to time here
+***         timing_end(&t);
+***         printf("code completed in %f seconds\n", t.timing_double);
+***         char *pretty_output = format_time_diff(&t);
+***         printf("code completed in %s (HH:MM:SS.MS.MLS)\n")
+
 ***
 *******************************************************************************/
 #ifndef __TIMING_H__
@@ -37,10 +49,13 @@ struct timing {
 	double timing_double;
 } timing;
 
-
+/* Begin timing section */
 void timing_start(struct timing *t);
+/* End timing section, automatically calculates time spent */
 void timing_end(struct timing *t);
+/* Returns a time formatted as a string which must be freed by the caller */
 char* format_time_diff(struct timing *t);
+/* Force a time difference calculation */
 void calc_difference(struct timing *t); /* only necessary, very occasionally */
 
 #ifdef _WIN32
@@ -76,6 +91,14 @@ void calc_difference(struct timing *t){
     t->timing_double = difference.tv_sec + (difference.tv_usec / 1000000.0);
 }
 
+/*
+    format_time_diff allocates memory and returns a pointer to that memory location
+    it is up to the caller to release this memory!
+
+    E.g.,
+        char *result = format_time_diff(&t);
+        free(result);
+*/
 char* format_time_diff(struct timing *t) {
 	struct timeval difference;
     int digits = 14; // this is everything but the hours

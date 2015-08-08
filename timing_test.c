@@ -8,6 +8,7 @@ int main(int argc, char **argv) {
 
     printf("timing version: %s\n", timing_get_version());
     timing_start(&t);
+    // modify timinh by hand to get a good printout
     struct timeval tv;
     tv.tv_sec = 1000;
     tv.tv_usec = 101;
@@ -22,6 +23,7 @@ int main(int argc, char **argv) {
     char *tmp = format_time_diff(&t);
     printf("difference as long long: %lld\t%s\n", i, tmp);
 
+    // more conventional use case
     timing_start(&t);
     sleep(61);
     timing_end(&t);
