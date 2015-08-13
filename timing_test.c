@@ -4,7 +4,7 @@
 #include "timing.h"
 
 int main(int argc, char **argv) {
-    struct timing t;
+    Timing t;
 
     printf("timing version: %s\n", timing_get_version());
     timing_start(&t);
@@ -27,6 +27,6 @@ int main(int argc, char **argv) {
     timing_start(&t);
     sleep(61);
     timing_end(&t);
-    printf("time elapsed: %f\n", t.timing_double);
+    printf("time elapsed: %f\n", timing_get_difference(t));
     free(tmp);
 }

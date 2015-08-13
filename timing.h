@@ -41,28 +41,31 @@
 #define TIMING_REVISION 0
 
 #define timing_get_version()    (TIMING_VERSION)
+#define timing_get_difference(t)    (t.timing_double)
 
-
-struct timing {
+typedef struct timing {
     struct timeval end_time;
 	struct timeval start_time;
 	double timing_double;
-} timing;
+} Timing;
 
 /* Begin timing section */
-void timing_start(struct timing *t);
+void timing_start(Timing *t);
+
 /* End timing section, automatically calculates time spent */
-void timing_end(struct timing *t);
+void timing_end(Timing *t);
+
 /* Returns a time formatted as a string which must be freed by the caller */
-char* format_time_diff(struct timing *t);
+char* format_time_diff(Timing *t);
+
 /* Force a time difference calculation */
-void calc_difference(struct timing *t); /* only necessary, very occasionally */
+void calc_difference(Timing *t); /* only necessary, very occasionally */
 
 #ifdef _WIN32
-typedef struct timeval {
+struct timeval {
     long tv_sec;
     long tv_usec;
-} timeval;
+};
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
 
@@ -73,19 +76,19 @@ static long long timeval_diff(struct timeval *difference, struct timeval *end_ti
 /*******************************************************************************
 *** PUBLIC FUNCTION DEFINITIONS
 *******************************************************************************/
-void timing_start(struct timing *t) {
+void timing_start(Timing *t) {
     gettimeofday(&t->start_time, NULL);
 	t->end_time.tv_sec = 0;
 	t->end_time.tv_usec = 0;
 	t->timing_double = 0.0;
 }
 
-void timing_end(struct timing *t) {
+void timing_end(Timing *t) {
     gettimeofday(&t->end_time, NULL);
     calc_difference(t);
 }
 
-void calc_difference(struct timing *t){
+void calc_difference(Timing *t){
     struct timeval difference;
 	timeval_diff(&difference, &t->end_time, &t->start_time);
     t->timing_double = difference.tv_sec + (difference.tv_usec / 1000000.0);
@@ -99,7 +102,7 @@ void calc_difference(struct timing *t){
         char *result = format_time_diff(&t);
         free(result);
 */
-char* format_time_diff(struct timing *t) {
+char* format_time_diff(Timing *t) {
 	struct timeval difference;
     int digits = 14; // this is everything but the hours
 	timeval_diff(&difference, &t->end_time, &t->start_time);
