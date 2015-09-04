@@ -1,24 +1,23 @@
 /*******************************************************************************
 ***
-***     Author: Tyler Barrus
-***     email:  barrust@gmail.com
+***	 Author: Tyler Barrus
+***	 email:  barrust@gmail.com
 ***
-***     Version: 1.0.0
-***     Purpose: Provide a simple format to gather timing information
+***	 Version: 1.0.0
+***	 Purpose: Provide a simple format to gather timing information
 ***
-***     License: MIT 2015
+***	 License: MIT 2015
 ***
-***     URL: https://github.com/barrust/timing-c
+***	 URL: https://github.com/barrust/timing-c
 ***
-***     Usage:
-***         struct timing t;
-***         timing_start(&t);
-***         // code to time here
-***         timing_end(&t);
-***         printf("code completed in %f seconds\n", t.timing_double);
-***         char *pretty_output = format_time_diff(&t);
-***         printf("code completed in %s (HH:MM:SS.MS.MLS)\n")
-
+***	 Usage:
+***		 Timing t;
+***		 timing_start(&t);
+***		 // code to time here
+***		 timing_end(&t);
+***		 printf("code completed in %f seconds\n", t.timing_double);
+***		 char *pretty_output = format_time_diff(&t);
+***		 printf("code completed in %s (HH:MM:SS.MS.MLS)\n");
 ***
 *******************************************************************************/
 #ifndef __TIMING_H__
@@ -28,10 +27,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #ifdef _WIN32
-    #include <Windows.h>
-    #include <stdint.h>     // portable: uint64_t   MSVC: __int64
+	#include <Windows.h>
+	#include <stdint.h>    // portable: uint64_t   MSVC: __int64
 #else
-    #include <sys/time.h>   /* *nix based timing; doesn't support windows */
+	#include <sys/time.h>  /* *nix based timing; doesn't support windows */
 #endif
 
 
@@ -40,11 +39,11 @@
 #define TIMING_MINOR 0
 #define TIMING_REVISION 0
 
-#define timing_get_version()    (TIMING_VERSION)
-#define timing_get_difference(t)    (t.timing_double)
+#define timing_get_version()		(TIMING_VERSION)
+#define timing_get_difference(t)	(t.timing_double)
 
 typedef struct timing {
-    struct timeval end_time;
+	struct timeval end_time;
 	struct timeval start_time;
 	double timing_double;
 } Timing;
@@ -63,8 +62,8 @@ void calc_difference(Timing *t); /* only necessary, very occasionally */
 
 #ifdef _WIN32
 struct timeval {
-    long tv_sec;
-    long tv_usec;
+	long tv_sec;
+	long tv_usec;
 };
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
@@ -77,56 +76,56 @@ static long long timeval_diff(struct timeval *difference, struct timeval *end_ti
 *** PUBLIC FUNCTION DEFINITIONS
 *******************************************************************************/
 void timing_start(Timing *t) {
-    gettimeofday(&t->start_time, NULL);
+	gettimeofday(&t->start_time, NULL);
 	t->end_time.tv_sec = 0;
 	t->end_time.tv_usec = 0;
 	t->timing_double = 0.0;
 }
 
 void timing_end(Timing *t) {
-    gettimeofday(&t->end_time, NULL);
-    calc_difference(t);
+	gettimeofday(&t->end_time, NULL);
+	calc_difference(t);
 }
 
 void calc_difference(Timing *t){
-    struct timeval difference;
+	struct timeval difference;
 	timeval_diff(&difference, &t->end_time, &t->start_time);
-    t->timing_double = difference.tv_sec + (difference.tv_usec / 1000000.0);
+	t->timing_double = difference.tv_sec + (difference.tv_usec / 1000000.0);
 }
 
 /*
-    format_time_diff allocates memory and returns a pointer to that memory location
-    it is up to the caller to release this memory!
+	format_time_diff allocates memory and returns a pointer to that memory location
+	it is up to the caller to release this memory!
 
-    E.g.,
-        char *result = format_time_diff(&t);
-        free(result);
+	E.g.,
+		char *result = format_time_diff(&t);
+		free(result);
 */
 char* format_time_diff(Timing *t) {
 	struct timeval difference;
-    int digits = 14; // this is everything but the hours
+	int digits = 14; // this is everything but the hours
 	timeval_diff(&difference, &t->end_time, &t->start_time);
 	int s = difference.tv_sec;
 	int ms = difference.tv_usec;
 	// lazily do the calculations; this could be done in less lines of code
 	int hours = s / 3600;
-    int n = hours;
-    int count = 0;
-    while(n!=0) {
-        n/=10;
-        ++count;
-    }
-    if (n < 2) {n = 2;}
-    digits += n;
+	int n = hours;
+	int count = 0;
+	while(n!=0) {
+		n/=10;
+		++count;
+	}
+	if (n < 2) {n = 2;}
+	digits += n;
 	int minutes = (s % 3600) / 60;
 	int seconds = (s % 3600) % 60;
 	int milliseconds = ms / 1000;
 	int microseconds = ms % 1000;
 	// put it into a string!
-    char* res = malloc(sizeof(char) * (digits + 1));
+	char* res = malloc(sizeof(char) * (digits + 1));
 	sprintf(res, "%02d:%02d:%02d:%03d.%03d", hours, minutes, seconds, milliseconds, microseconds);
-    res[digits] = '\0';
-    return res;
+	res[digits] = '\0';
+	return res;
 }
 
 
@@ -154,28 +153,28 @@ static long long timeval_diff(struct timeval *difference, struct timeval *end_ti
 
 
 /*******************************************************************************
-***    Define a gettimeofday function for windows machines
+***	Define a gettimeofday function for windows machines
 *******************************************************************************/
 #ifdef _WIN32
 /*
-    NOTE: this ignores the timezone information since we don't need it
+	NOTE: this ignores the timezone information since we don't need it
 */
-int gettimeofday(struct timeval * tp, struct timezone * tzp) {
-    // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
-    static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL);
+int gettimeofday(struct timeval *tp, struct timezone *tzp) {
+	// Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
+	static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL);
 
-    SYSTEMTIME  system_time;
-    FILETIME    file_time;
-    uint64_t    time;
+	SYSTEMTIME  system_time;
+	FILETIME	file_time;
+	uint64_t	time;
 
-    GetSystemTime( &system_time );
-    SystemTimeToFileTime( &system_time, &file_time );
-    time =  ((uint64_t)file_time.dwLowDateTime )      ;
-    time += ((uint64_t)file_time.dwHighDateTime) << 32;
+	GetSystemTime(&system_time);
+	SystemTimeToFileTime(&system_time, &file_time);
+	time =  ((uint64_t)file_time.dwLowDateTime);
+	time += ((uint64_t)file_time.dwHighDateTime) << 32;
 
-    tp->tv_sec  = (long) ((time - EPOCH) / 10000000L);
-    tp->tv_usec = (long) (system_time.wMilliseconds * 1000);
-    return 0;
+	tp->tv_sec  = (long) ((time - EPOCH) / 10000000L);
+	tp->tv_usec = (long) (system_time.wMilliseconds * 1000);
+	return 0;
 }
 #endif // end defining windows gettimeofday function
 
