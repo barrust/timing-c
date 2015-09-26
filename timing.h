@@ -95,7 +95,7 @@ void calc_difference(Timing *t){
 
 /*
 	format_time_diff allocates memory and returns a pointer to that memory location
-	it is up to the caller to release this memory!
+	NOTE: It is up to the caller to release this memory!
 
 	E.g.,
 		char *result = format_time_diff(&t);
