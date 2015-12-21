@@ -3,7 +3,7 @@
 ***	 Author: Tyler Barrus
 ***	 email:  barrust@gmail.com
 ***
-***	 Version: 1.0.1
+***	 Version: 1.0.2
 ***	 Purpose: Provide a simple format to gather timing information
 ***
 ***	 License: MIT 2015
@@ -17,7 +17,8 @@
 ***		 timing_end(&t);
 ***		 printf("code completed in %f seconds\n", t.timing_double);
 ***		 char *pretty_output = format_time_diff(&t);
-***		 printf("code completed in %s (HH:MM:SS.MS.MLS)\n");
+***		 printf("code completed in %s (HH:MM:SS.MS.MLS)\n", pretty_output);
+***		 free(pretty_output);
 ***
 *******************************************************************************/
 #ifndef __TIMING_H__
@@ -34,10 +35,10 @@
 #endif
 
 
-#define TIMING_VERSION "1.0.1"
+#define TIMING_VERSION "1.0.2"
 #define TIMING_MAJOR 1
 #define TIMING_MINOR 0
-#define TIMING_REVISION 1
+#define TIMING_REVISION 2
 
 #define timing_get_version()        (TIMING_VERSION)
 #define timing_get_difference(t)    (t.timing_double)
