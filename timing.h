@@ -3,7 +3,7 @@
 ***	 Author: Tyler Barrus
 ***	 email:  barrust@gmail.com
 ***
-***	 Version: 1.0.2
+***	 Version: 1.0.3
 ***	 Purpose: Provide a simple format to gather timing information
 ***
 ***	 License: MIT 2015
@@ -35,10 +35,10 @@
 #endif
 
 
-#define TIMING_VERSION "1.0.2"
+#define TIMING_VERSION "1.0.3"
 #define TIMING_MAJOR 1
 #define TIMING_MINOR 0
-#define TIMING_REVISION 2
+#define TIMING_REVISION 3
 
 #define timing_get_version()        (TIMING_VERSION)
 #define timing_get_difference(t)    (t.timing_double)
@@ -104,28 +104,21 @@ void calc_difference(Timing *t){
 */
 char* format_time_diff(Timing *t) {
 	struct timeval difference;
-	int digits = 14; // this is everything but the hours
+	// int digits = 14; // this is everything but the hours
 	timeval_diff(&difference, &t->end_time, &t->start_time);
 	int s = difference.tv_sec;
 	int ms = difference.tv_usec;
-	// lazily do the calculations; this could be done in less lines of code
+
+	// calculate the different pieces...
 	int hours = s / 3600;
-	int n = hours;
-	int count = 0;
-	while(n!=0) {
-		n/=10;
-		++count;
-	}
-	if (n < 2) {n = 2;}
-	digits += n;
 	int minutes = (s % 3600) / 60;
 	int seconds = (s % 3600) % 60;
 	int milliseconds = ms / 1000;
 	int microseconds = ms % 1000;
 	// put it into a string!
-	char* res = malloc(sizeof(char) * (digits + 1));
-	sprintf(res, "%02d:%02d:%02d:%03d.%03d", hours, minutes, seconds, milliseconds, microseconds);
-	res[digits] = '\0';
+	int len = snprintf(NULL, 0, "%02d:%02d:%02d:%03d.%03d", hours, minutes, seconds, milliseconds, microseconds);
+	char* res = calloc(len + 1, sizeof(char));
+	snprintf(res, len + 1, "%02d:%02d:%02d:%03d.%03d", hours, minutes, seconds, milliseconds, microseconds);
 	return res;
 }
 

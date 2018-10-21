@@ -20,13 +20,17 @@ int main(int argc, char **argv) {
     calc_difference(&t);
 
     long long i = timeval_diff(NULL, &t.end_time, &t.start_time);
-    char *tmp = format_time_diff(&t);
+    char* tmp = format_time_diff(&t);
     printf("difference as long long: %lld\t%s\n", i, tmp);
+    free(tmp);
 
     // more conventional use case
     timing_start(&t);
     sleep(61);
     timing_end(&t);
+    i = timeval_diff(NULL, &t.end_time, &t.start_time);
+    tmp = format_time_diff(&t);
     printf("time elapsed: %f\n", timing_get_difference(t));
+    printf("difference as long long: %lld\t%s\n", i, tmp);
     free(tmp);
 }
