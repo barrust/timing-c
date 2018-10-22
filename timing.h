@@ -21,8 +21,8 @@
 ***		 free(pretty_output);
 ***
 *******************************************************************************/
-#ifndef __TIMING_H__
-#define __TIMING_H__
+#ifndef BARRUST_TIMING_H__
+#define BARRUST_TIMING_H__
 
 
 #include <stdlib.h>
@@ -47,6 +47,11 @@ typedef struct timing {
 	struct timeval end_time;
 	struct timeval start_time;
 	double timing_double;
+	int hours;
+	short minutes;
+	short seconds;
+	short milliseconds;
+	short microseconds;
 } Timing;
 
 /* Begin timing section */
@@ -92,6 +97,14 @@ void calc_difference(Timing *t){
 	struct timeval difference;
 	timeval_diff(&difference, &t->end_time, &t->start_time);
 	t->timing_double = difference.tv_sec + (difference.tv_usec / 1000000.0);
+
+	int s = difference.tv_sec;
+	int ms = difference.tv_usec;
+	t->hours = s / 3600;
+	t->minutes = (s % 3600) / 60;
+	t->seconds = (s % 3600) % 60;
+	t->milliseconds = ms / 1000;
+	t->microseconds = ms % 1000;
 }
 
 /*
@@ -105,19 +118,11 @@ void calc_difference(Timing *t){
 char* format_time_diff(Timing *t) {
 	struct timeval difference;
 	timeval_diff(&difference, &t->end_time, &t->start_time);
-	int s = difference.tv_sec;
-	int ms = difference.tv_usec;
 
-	// calculate the different pieces...
-	int hours = s / 3600;
-	int minutes = (s % 3600) / 60;
-	int seconds = (s % 3600) % 60;
-	int milliseconds = ms / 1000;
-	int microseconds = ms % 1000;
 	// put it into a string!
-	int len = snprintf(NULL, 0, "%02d:%02d:%02d:%03d.%03d", hours, minutes, seconds, milliseconds, microseconds);
+	int len = snprintf(NULL, 0, "%02d:%02d:%02d:%03d.%03d", t->hours, t->minutes, t->seconds, t->milliseconds, t->microseconds);
 	char* res = calloc(len + 1, sizeof(char));
-	snprintf(res, len + 1, "%02d:%02d:%02d:%03d.%03d", hours, minutes, seconds, milliseconds, microseconds);
+	snprintf(res, len + 1, "%02d:%02d:%02d:%03d.%03d", t->hours, t->minutes, t->seconds, t->milliseconds, t->microseconds);
 	return res;
 }
 
@@ -172,4 +177,4 @@ int gettimeofday(struct timeval *tp, struct timezone *tzp) {
 #endif // end defining windows gettimeofday function
 
 
-#endif /* END OF TIMING.H */
+#endif /* END OF BARRUST_TIMING_H__ */
