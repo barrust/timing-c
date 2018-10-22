@@ -104,7 +104,6 @@ void calc_difference(Timing *t){
 */
 char* format_time_diff(Timing *t) {
 	struct timeval difference;
-	// int digits = 14; // this is everything but the hours
 	timeval_diff(&difference, &t->end_time, &t->start_time);
 	int s = difference.tv_sec;
 	int ms = difference.tv_usec;
