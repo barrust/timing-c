@@ -3,7 +3,7 @@
 ***	 Author: Tyler Barrus
 ***	 email:  barrust@gmail.com
 ***
-***	 Version: 1.0.3
+***	 Version: 1.0.4
 ***	 Purpose: Provide a simple format to gather timing information
 ***
 ***	 License: MIT 2015
@@ -35,13 +35,19 @@
 #endif
 
 
-#define TIMING_VERSION "1.0.3"
+#define TIMING_VERSION "1.0.4"
 #define TIMING_MAJOR 1
 #define TIMING_MINOR 0
-#define TIMING_REVISION 3
+#define TIMING_REVISION 4
 
 #define timing_get_version()        (TIMING_VERSION)
 #define timing_get_difference(t)    (t.timing_double)
+#define timing_get_hours(t)			(t.hours)
+#define timing_get_minutes(t)		(t.minutes)
+#define timing_get_seconds(t)		(t.seconds)
+#define timing_get_milliseconds(t)	(t.milliseconds)
+#define timing_get_microseconds(t)	(t.microseconds)
+
 
 typedef struct timing {
 	struct timeval end_time;

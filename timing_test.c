@@ -43,5 +43,10 @@ int main(int argc, char **argv) {
 	 printf("code completed in %f seconds\n", t.timing_double);
 	 char *pretty_output = format_time_diff(&t);
 	 printf("code completed in %s (HH:MM:SS.MS.MLS)\n", pretty_output);
+     printf("hours:        %d\n", timing_get_hours(t));
+     printf("minutes:      %d\n", timing_get_minutes(t));
+     printf("seconds:      %d\n", timing_get_seconds(t));
+     printf("milliseconds: %d\n", timing_get_milliseconds(t));
+     printf("microseconds: %d\n", timing_get_microseconds(t));
 	 free(pretty_output);
 }
